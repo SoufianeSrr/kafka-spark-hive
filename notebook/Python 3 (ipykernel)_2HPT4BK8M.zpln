@@ -1,0 +1,694 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# Sections\n* [Description](#0)\n* [1. Setup](#1) \n  * [1.1 Start the Kafka service and the producer](#1.1)\n  * [1.2 Search for Spark Installation](#1.2)\n  * [1.3 Create SparkSession](#1.3)\n* [2. Use case](#2) \n  * [2.1 Main DataFrame creation](#2.1)\n  * [2.2 Map the sequence of bytes to a proper JSON document and display contents](#2.2)\n* [3. Finalize the exercise](#3)\n  * [3.1 Stop the Spark Streaming application](#3.1)\n  * [3.2 Stop the Kafka producer](#3.2)\n  * [3.3 Stop the Kafka service](#3.3)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.722",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eSections\u003c/h1\u003e\n\u003cul\u003e\n  \u003cli\u003e\u003ca href\u003d\"#0\"\u003eDescription\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#1\"\u003e1. Setup\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#1.1\"\u003e1.1 Start the Kafka service and the producer\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#1.2\"\u003e1.2 Search for Spark Installation\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#1.3\"\u003e1.3 Create SparkSession\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#2\"\u003e2. Use case\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#2.1\"\u003e2.1 Main DataFrame creation\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#2.2\"\u003e2.2 Map the sequence of bytes to a proper JSON document and display contents\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#3\"\u003e3. Finalize the exercise\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#3.1\"\u003e3.1 Stop the Spark Streaming application\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#3.2\"\u003e3.2 Stop the Kafka producer\u003c/a\u003e\u003c/li\u003e\n  \u003cli\u003e\u003ca href\u003d\"#3.3\"\u003e3.3 Stop the Kafka service\u003c/a\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572722_2067037902",
+      "id": "20221221-001252_1848360176",
+      "dateCreated": "2022-12-21 00:12:52.722",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00270\u0027\u003e\u003c/a\u003e\n## Description\n\u003cp\u003e\n\u003cdiv\u003eThis notebook will help you address the following:\u003c/div\u003e\n\u003cul\u003e    \n    \u003cli\u003eConsume events from a Kafka topic called \u003cem\u003etweets\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003eTranslate tweets ingested in raw format (sequence of bytes) into the proper JSON format\u003c/li\u003e\n    \u003cli\u003eSee how to manipulate tweets - use your imagination here to implement a use case you like\u003c/li\u003e\n    \u003cli\u003eDisplay the results of the manipulation on the consule; continue the journey of the real-time solution by yourself (ex. publish results in Kafka, MariaDB, MongoDB, ...)\u003c/li\u003e\n\u003c/ul\u003e    \n\u003c/p\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.722",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00270\u0027\u003e\u003c/a\u003e\n\u003ch2\u003eDescription\u003c/h2\u003e\n\u003cp\u003e\n\u003cdiv\u003eThis notebook will help you address the following:\u003c/div\u003e\n\u003cul\u003e    \n    \u003cli\u003eConsume events from a Kafka topic called \u003cem\u003etweets\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003eTranslate tweets ingested in raw format (sequence of bytes) into the proper JSON format\u003c/li\u003e\n    \u003cli\u003eSee how to manipulate tweets - use your imagination here to implement a use case you like\u003c/li\u003e\n    \u003cli\u003eDisplay the results of the manipulation on the consule; continue the journey of the real-time solution by yourself (ex. publish results in Kafka, MariaDB, MongoDB, ...)\u003c/li\u003e\n\u003c/ul\u003e    \n\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572722_465816044",
+      "id": "20221221-001252_390710820",
+      "dateCreated": "2022-12-21 00:12:52.722",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00271\u0027\u003e\u003c/a\u003e\n## 1. Setup",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00271\u0027\u003e\u003c/a\u003e\n\u003ch2\u003e1. Setup\u003c/h2\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_877889972",
+      "id": "20221221-001252_1329201850",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00271.1\u0027\u003e\u003c/a\u003e\n### 1.1 Start the Kafka service and the producer \n\u003cp\u003eBefore you can run this notebook, be sure that you log into the course environment and:\u003c/p\u003e\n\u003cul\u003e\n    \u003cli\u003e\u003cp\u003e\u003cb\u003eStart the Kafka service\u003c/b\u003e:\n        \u003cbr/\u003e\u003cem\u003e\\$ sudo service kafka start\u003c/p\u003e\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003e\u003cb\u003eInstall the required libraries\u003c/b\u003e entailed in the \u003cb\u003erequirements.txt\u003c/b\u003e file:\n        \u003cbr/\u003e\u003cem\u003e\\$ pip install -r requirements.txt\u003c/p\u003e\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003eAdd your \u003cb\u003eAPI key\u003c/b\u003e, \u003cb\u003eAPI secret\u003c/b\u003e, \u003cb\u003eaccess token\u003c/b\u003e and \u003cb\u003eaccess secret\u003c/b\u003e to the \u003cem\u003ecredentials.ini\u003c/em\u003e file\u003c/li\u003e\n    \u003cli\u003e\u003cp\u003e\u003cb\u003eStart the producer\u003c/b\u003e connecting to Twitter and filtering tweets by keywords or hashtags:\n        \u003cbr/\u003e\u003cem\u003e\\$ python3 twitter_producer.py credentials.ini \"btc,#eth,ada\" -b localhost:9092 -t tweets\u003c/em\u003e\u003c/p\u003e\u003c/li\u003e\n\u003c/ul\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00271.1\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e1.1 Start the Kafka service and the producer\u003c/h3\u003e\n\u003cp\u003eBefore you can run this notebook, be sure that you log into the course environment and:\u003c/p\u003e\n\u003cul\u003e\n    \u003cli\u003e\u003cp\u003e\u003cb\u003eStart the Kafka service\u003c/b\u003e:\n        \u003cbr/\u003e\u003cem\u003e\\$ sudo service kafka start\u003c/p\u003e\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003e\u003cb\u003eInstall the required libraries\u003c/b\u003e entailed in the \u003cb\u003erequirements.txt\u003c/b\u003e file:\n        \u003cbr/\u003e\u003cem\u003e\\$ pip install -r requirements.txt\u003c/p\u003e\u003c/em\u003e\u003c/li\u003e\n    \u003cli\u003eAdd your \u003cb\u003eAPI key\u003c/b\u003e, \u003cb\u003eAPI secret\u003c/b\u003e, \u003cb\u003eaccess token\u003c/b\u003e and \u003cb\u003eaccess secret\u003c/b\u003e to the \u003cem\u003ecredentials.ini\u003c/em\u003e file\u003c/li\u003e\n    \u003cli\u003e\u003cp\u003e\u003cb\u003eStart the producer\u003c/b\u003e connecting to Twitter and filtering tweets by keywords or hashtags:\n        \u003cbr/\u003e\u003cem\u003e\\$ python3 twitter_producer.py credentials.ini \"btc,#eth,ada\" -b localhost:9092 -t tweets\u003c/em\u003e\u003c/p\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_1796087543",
+      "id": "20221221-001252_1036605829",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00271.2\u0027\u003e\u003c/a\u003e\n### 1.2 Search for Spark Installation \nThis step is required just because we are working in the course environment.",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00271.2\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e1.2 Search for Spark Installation\u003c/h3\u003e\n\u003cp\u003eThis step is required just because we are working in the course environment.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_842593877",
+      "id": "20221221-001252_53809340",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\nimport findspark\nfindspark.init()",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:13:58.931",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "completionKey": "TAB"
+        },
+        "editorMode": "ace/mode/python",
+        "colWidth": 12.0,
+        "editorHide": false,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_869709216",
+      "id": "20221221-001252_1511296536",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "dateStarted": "2022-12-21 00:13:58.956",
+      "dateFinished": "2022-12-21 00:13:59.178",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00271.3\u0027\u003e\u003c/a\u003e\n### 1.3 Create SparkSession\n\nIn addition to create the Spark Session, we\u0027re going to set up a variable environment to include extra libraries in our \"cluster\".\u003cbr/\u003e\nIn this case we\u0027re including the Spark package as our job will connect to Kafka.",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00271.3\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e1.3 Create SparkSession\u003c/h3\u003e\n\u003cp\u003eIn addition to create the Spark Session, we\u0026rsquo;re going to set up a variable environment to include extra libraries in our \u0026ldquo;cluster\u0026rdquo;.\u003cbr/\u003e\u003cbr/\u003eIn this case we\u0026rsquo;re including the Spark package as our job will connect to Kafka.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_1801911987",
+      "id": "20221221-001252_1160017970",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\nimport os\nos.environ[\u0027PYSPARK_SUBMIT_ARGS\u0027] \u003d \u0027--packages \"org.apache.spark:spark-sql-kafka-0-10_2.12:3.0.3\" pyspark-shell\u0027\n\nfrom pyspark.context import SparkContext\nfrom pyspark.sql.session import SparkSession\n\nspark \u003d SparkSession.builder.appName(\"Twitter\").getOrCreate()",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:14:13.898",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "completionKey": "TAB"
+        },
+        "editorMode": "ace/mode/python",
+        "colWidth": 12.0,
+        "editorHide": false,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_993921444",
+      "id": "20221221-001252_1733786395",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "dateStarted": "2022-12-21 00:14:13.919",
+      "dateFinished": "2022-12-21 00:14:14.146",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00272\u0027\u003e\u003c/a\u003e\n## 2. Use Case",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00272\u0027\u003e\u003c/a\u003e\n\u003ch2\u003e2. Use Case\u003c/h2\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_1714486847",
+      "id": "20221221-001252_1879975813",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00272.1\u0027\u003e\u003c/a\u003e\n### 2.1 Main DataFrame creation\n\u003cp\u003eHave a look at the schema you get by default when you create a DataFrame on top of a Kafka topic.\u003cbr/\u003e The \u003cb\u003e\u003cem\u003evalue field\u003c/b\u003e\u003c/em\u003e is the one containing the data from the \u003cem\u003eingestion layer\u003c/em\u003e, the Twitter producer in our case.\u003c/p\u003e\n\u003cp\u003eBear in mind thataAs \u003cem\u003ewe\u0027re simplifying things\u003c/em\u003e, we\u0027re not relying on schemas and \u003cb\u003ewe\u0027re sending sequence of bytes to Kafka topics\u003c/b\u003e.\u003c/p\u003e\n\u003cp\u003eLater in the notebook, we\u0027re going to convert that sequence of bytes in a proper JSON document representing every tweet as it was received.\u003c/p\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.723",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00272.1\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e2.1 Main DataFrame creation\u003c/h3\u003e\n\u003cp\u003eHave a look at the schema you get by default when you create a DataFrame on top of a Kafka topic.\u003cbr/\u003e The \u003cb\u003e\u003cem\u003evalue field\u003c/b\u003e\u003c/em\u003e is the one containing the data from the \u003cem\u003eingestion layer\u003c/em\u003e, the Twitter producer in our case.\u003c/p\u003e\n\u003cp\u003eBear in mind thataAs \u003cem\u003ewe\u0027re simplifying things\u003c/em\u003e, we\u0027re not relying on schemas and \u003cb\u003ewe\u0027re sending sequence of bytes to Kafka topics\u003c/b\u003e.\u003c/p\u003e\n\u003cp\u003eLater in the notebook, we\u0027re going to convert that sequence of bytes in a proper JSON document representing every tweet as it was received.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_1853016474",
+      "id": "20221221-001252_752686396",
+      "dateCreated": "2022-12-21 00:12:52.723",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n\nrawTweetsDF \u003d spark.readStream \\\n                   .format(\"kafka\") \\\n                   .option(\"kafka.bootstrap.servers\", \"192.168.1.3:9092\") \\\n                   .option(\"subscribe\", \"streamTopic\") \\\n                   .option(\"startingOffsets\", \"latest\") \\\n                   .load()\nrawTweetsDF",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:20:32.690",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "completionKey": "TAB"
+        },
+        "editorMode": "ace/mode/python",
+        "colWidth": 12.0,
+        "editorHide": false,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m\n\u001b[0;31mPy4JJavaError\u001b[0m                             Traceback (most recent call last)\n\u001b[0;32m~opt/zeppelin/interpreter/spark/pyspark/pyspark.zip/pyspark/sql/utils.py\u001b[0m in \u001b[0;36mdeco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m     62\u001b[0m         \u001b[0;32mtry\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---\u003e 63\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mf\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m*\u001b[0m\u001b[0ma\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m**\u001b[0m\u001b[0mkw\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     64\u001b[0m         \u001b[0;32mexcept\u001b[0m \u001b[0mpy4j\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mprotocol\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mPy4JJavaError\u001b[0m \u001b[0;32mas\u001b[0m \u001b[0me\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~opt/zeppelin/interpreter/spark/pyspark/py4j-0.10.7-src.zip/py4j/protocol.py\u001b[0m in \u001b[0;36mget_return_value\u001b[0;34m(answer, gateway_client, target_id, name)\u001b[0m\n\u001b[1;32m    327\u001b[0m                     \u001b[0;34m\"An error occurred while calling {0}{1}{2}.\\n\"\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 328\u001b[0;31m                     format(target_id, \".\", name), value)\n\u001b[0m\u001b[1;32m    329\u001b[0m             \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;31mPy4JJavaError\u001b[0m: An error occurred while calling o220.load.\n: org.apache.spark.sql.AnalysisException: Failed to find data source: kafka. Please deploy the application as per the deployment section of \"Structured Streaming + Kafka Integration Guide\".;\n\tat org.apache.spark.sql.execution.datasources.DataSource$.lookupDataSource(DataSource.scala:652)\n\tat org.apache.spark.sql.streaming.DataStreamReader.load(DataStreamReader.scala:161)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)\n\tat sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)\n\tat sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)\n\tat java.lang.reflect.Method.invoke(Method.java:498)\n\tat py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)\n\tat py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:357)\n\tat py4j.Gateway.invoke(Gateway.java:282)\n\tat py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)\n\tat py4j.commands.CallCommand.execute(CallCommand.java:79)\n\tat py4j.GatewayConnection.run(GatewayConnection.java:238)\n\tat java.lang.Thread.run(Thread.java:748)\n\n\nDuring handling of the above exception, another exception occurred:\n\n\u001b[0;31mAnalysisException\u001b[0m                         Traceback (most recent call last)\n\u001b[0;32m\u003cipython-input-60-1214ae3bbbfd\u003e\u001b[0m in \u001b[0;36m\u003cmodule\u003e\u001b[0;34m\u001b[0m\n\u001b[1;32m      3\u001b[0m                    \u001b[0;34m.\u001b[0m\u001b[0moption\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"kafka.bootstrap.servers\"\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"192.168.1.3:9092\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      4\u001b[0m                    \u001b[0;34m.\u001b[0m\u001b[0moption\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"subscribe\"\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"streamTopic\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----\u003e 5\u001b[0;31m                    \u001b[0;34m.\u001b[0m\u001b[0moption\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"startingOffsets\"\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;34m\"latest\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;31m \u001b[0m\u001b[0;31m\\\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m      6\u001b[0m                    \u001b[0;34m.\u001b[0m\u001b[0mload\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m      7\u001b[0m \u001b[0mrawTweetsDF\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~opt/zeppelin/interpreter/spark/pyspark/pyspark.zip/pyspark/sql/streaming.py\u001b[0m in \u001b[0;36mload\u001b[0;34m(self, path, format, schema, **options)\u001b[0m\n\u001b[1;32m    398\u001b[0m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_df\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jreader\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mload\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mpath\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    399\u001b[0m         \u001b[0;32melse\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m--\u003e 400\u001b[0;31m             \u001b[0;32mreturn\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_df\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0m_jreader\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mload\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m    401\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m    402\u001b[0m     \u001b[0;34m@\u001b[0m\u001b[0msince\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;36m2.0\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~opt/zeppelin/interpreter/spark/pyspark/py4j-0.10.7-src.zip/py4j/java_gateway.py\u001b[0m in \u001b[0;36m__call__\u001b[0;34m(self, *args)\u001b[0m\n\u001b[1;32m   1255\u001b[0m         \u001b[0manswer\u001b[0m \u001b[0;34m\u003d\u001b[0m \u001b[0mself\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mgateway_client\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msend_command\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mcommand\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1256\u001b[0m         return_value \u003d get_return_value(\n\u001b[0;32m-\u003e 1257\u001b[0;31m             answer, self.gateway_client, self.target_id, self.name)\n\u001b[0m\u001b[1;32m   1258\u001b[0m \u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m   1259\u001b[0m         \u001b[0;32mfor\u001b[0m \u001b[0mtemp_arg\u001b[0m \u001b[0;32min\u001b[0m \u001b[0mtemp_args\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;32m~opt/zeppelin/interpreter/spark/pyspark/pyspark.zip/pyspark/sql/utils.py\u001b[0m in \u001b[0;36mdeco\u001b[0;34m(*a, **kw)\u001b[0m\n\u001b[1;32m     67\u001b[0m                                              e.java_exception.getStackTrace()))\n\u001b[1;32m     68\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0ms\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstartswith\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027org.apache.spark.sql.AnalysisException: \u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m---\u003e 69\u001b[0;31m                 \u001b[0;32mraise\u001b[0m \u001b[0mAnalysisException\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ms\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msplit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027: \u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mstackTrace\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m\u001b[1;32m     70\u001b[0m             \u001b[0;32mif\u001b[0m \u001b[0ms\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mstartswith\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027org.apache.spark.sql.catalyst.analysis\u0027\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m:\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[1;32m     71\u001b[0m                 \u001b[0;32mraise\u001b[0m \u001b[0mAnalysisException\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0ms\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0msplit\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\u0027: \u0027\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0;36m1\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m[\u001b[0m\u001b[0;36m1\u001b[0m\u001b[0;34m]\u001b[0m\u001b[0;34m,\u001b[0m \u001b[0mstackTrace\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\n\u001b[0;31mAnalysisException\u001b[0m: \u0027Failed to find data source: kafka. Please deploy the application as per the deployment section of \"Structured Streaming + Kafka Integration Guide\".;\u0027"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572723_1560060620",
+      "id": "20221221-001252_242923454",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "dateStarted": "2022-12-21 00:19:38.361",
+      "dateFinished": "2022-12-21 00:19:38.647",
+      "status": "ERROR"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00272.2\u0027\u003e\u003c/a\u003e\n### 2.2 Map the sequence of bytes to a proper JSON document and display contents\nWe\u0027re going to apply the following logic to the events we get from the topic:\n\u003col\u003e\n    \u003cli\u003eDefine the schema that matches the raw sequence of bytes we get from the topic.\u003c/li\u003e\n    \u003cli\u003eCast the default data type of the field \u003cem\u003evalue\u003c/em\u003e (byte) to the String data type.\u003c/li\u003e\n    \u003cli\u003eConvert the String into a proper JSON document by using the \u003cem\u003efrom_json\u003c/em\u003e function.\u003c/li\u003e\n    \u003cli\u003eFlatten the JSON file and display event time, user name, text and the id.\u003c/li\u003e\n    \u003cli\u003eDisplay the results in the console.\u003c/li\u003e\n\u003c/ol\u003e\n\nWatch the schema we get now, it looks like any other DataFrame we\u0027ve seen up until now... this is \u003cb\u003ea real unified processing framework\u003c/b\u003e.",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.724",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00272.2\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e2.2 Map the sequence of bytes to a proper JSON document and display contents\u003c/h3\u003e\n\u003cp\u003eWe\u0026rsquo;re going to apply the following logic to the events we get from the topic:\u003cbr/\u003e\u003col\u003e\u003cbr/\u003e \u003cli\u003eDefine the schema that matches the raw sequence of bytes we get from the topic.\u003c/li\u003e\u003cbr/\u003e \u003cli\u003eCast the default data type of the field \u003cem\u003evalue\u003c/em\u003e (byte) to the String data type.\u003c/li\u003e\u003cbr/\u003e \u003cli\u003eConvert the String into a proper JSON document by using the \u003cem\u003efrom_json\u003c/em\u003e function.\u003c/li\u003e\u003cbr/\u003e \u003cli\u003eFlatten the JSON file and display event time, user name, text and the id.\u003c/li\u003e\u003cbr/\u003e \u003cli\u003eDisplay the results in the console.\u003c/li\u003e\u003cbr/\u003e\u003c/ol\u003e\u003c/p\u003e\n\u003cp\u003eWatch the schema we get now, it looks like any other DataFrame we\u0026rsquo;ve seen up until now\u0026hellip; this is \u003cb\u003ea real unified processing framework\u003c/b\u003e.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572724_75196212",
+      "id": "20221221-001252_977778498",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "status": "READY"
+    },
+    {
+      "text": "%python\n# 1. Schema of a tweet coming from Twitter.\n\ntweet_schema\u003d\"\"\"\ncreated_at string,\nid bigint,\nid_str string,\ntext string,\nsource string,\ntruncated boolean,\nin_reply_to_status_id bigint,\nin_reply_to_status_id_str string,\nin_reply_to_user_id bigint,\nin_reply_to_user_id_str string,\nin_reply_to_screen_name string,\n`user` struct\u003c\n            id:bigint,\n            id_str:string,\n            name:string,\n            screen_name:string,\n            location:string,\n            url:string,\n            description:string,\n            protected:boolean,\n            verified:boolean,\n            followers_count:bigint,\n            friends_count:bigint,\n            listed_count:bigint,\n            favourites_count:bigint,\n            statuses_count:bigint,\n            created_at:string,\n            profile_banner_url:string,\n            profile_image_url_https:string,\n            default_profile:boolean,\n            default_profile_image:boolean,\n            withheld_in_countries: array\u003cstring\u003e,\n            withheld_scope:string,\n            geo_enabled:boolean\n            \u003e,\ncoordinates struct \u003c\n            coordinates:array\u003cfloat\u003e,\n            type:string\n            \u003e,\nplace struct\u003c\n            country:string,\n            country_code:string,\n            full_name:string,\n            place_type:string,\n            url:string\n            \u003e,\nquoted_status_id bigint,\nquoted_status_id_str string,\nis_quote_status boolean,\nquote_count bigint,\nreply_count bigint,\nretweet_count bigint,\nfavorite_count bigint,\nentities struct\u003c\n            user_mentions:array\u003cstruct\u003cscreen_name:string\u003e\u003e,\n            hashtags:array\u003cstruct\u003ctext:string\u003e\u003e, \n            media:array\u003cstruct\u003cexpanded_url:string\u003e\u003e, \n            urls:array\u003cstruct\u003cexpanded_url:string\u003e\u003e, \n            symbols:array\u003cstruct\u003ctext:string\u003e\u003e\n            \u003e,\nfavorited boolean,\nretweeted boolean,\npossibly_sensitive boolean,\nfilter_level string,\nlang string\n\"\"\"",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.724",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572724_915416462",
+      "id": "20221221-001252_172936442",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "status": "READY"
+    },
+    {
+      "text": "%python\nfrom pyspark.sql.types import StructType,StructField, StringType, IntegerType\nfrom pyspark.sql.functions import from_json, col\n\n# 2. Cast the default data type of the field value (byte) to the String data type.\n# 3. Convert the String into a proper JSON document by using the from_json function.\n# 4. Flatten the JSON file and display event time, user name, text and the id.\n\ntweetsDF \u003d rawTweetsDF.selectExpr(\"CAST(value AS STRING)\") \\\n                      .select(from_json(col(\"value\"), tweet_schema).alias(\"data\")) \\\n                      .select(col(\"data.created_at\").alias(\"event_time\"), \n                              col(\"data.user.screen_name\"),\n                              col(\"data.text\"),\n                              col(\"data.id\"))\ntweetsDF",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.724",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[event_time: string, screen_name: string, text: string, id: bigint]"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572724_115479145",
+      "id": "20221221-001252_780048307",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "status": "READY"
+    },
+    {
+      "text": "%python\n# 5. Display the results in the console.\n\ntweetsDF.writeStream \\\n        .format(\"console\") \\\n        .outputMode(\"append\") \\\n        .start() \\\n        .awaitTermination()\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.724",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/python",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "ERROR",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 10\n-------------------------------------------\n+--------------------+---------------+----------------------+-------------------+\n|          event_time|    screen_name|                  text|                 id|\n+--------------------+---------------+----------------------+-------------------+\n|Sat Feb 26 13:58:...|       Anjey561|  #CMN #cmnnews #cm...|1497571887576236039|\n|Sat Feb 26 13:58:...|     donqsj3001|  RT @RealPabloHema...|1497571887999864835|\n|Sat Feb 26 13:58:...|          x_pca|RT @dkcrypto1: 今ま...|1497571889648402434|\n|Sat Feb 26 13:58:...|   ArabeskToken|  RT @CRYPTOKOLIK14...|1497571889639829508|\n|Sat Feb 26 13:58:...|CryptoL24237730|  I am very thankfu...|1497571889425772547|\n|Sat Feb 26 13:58:...|     SUPER_SREK|  RT @IlseCrypto: I...|1497571889857720323|\n|Sat Feb 26 13:58:...|      topkripto|  RT @happycoinnews...|1497571890352640000|\n|Sat Feb 26 13:58:...|ramazan34678293|  @ethmaster089 @84...|1497571890428272641|\n+--------------------+---------------+----------------------+-------------------+\n\n-------------------------------------------\nBatch: 0\n-------------------------------------------\n+----------+-----------+----+---+\n|event_time|screen_name|text| id|\n+----------+-----------+----+---+\n+----------+-----------+----+---+\n\n-------------------------------------------\nBatch: 11\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:58:...| AdemHayla4|RT @hamisahin28: ...|1497571892542296066|\n|Sat Feb 26 13:58:...|misswinnerr|RT @IlseCrypto: I...|1497571893557473283|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 12\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:58:...| jossypackk|RT @usleepwalker:...|1497571895163736070|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 1\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:58:...|misswinnerr|RT @IlseCrypto: I...|1497571893557473283|\n|Sat Feb 26 13:58:...| jossypackk|RT @usleepwalker:...|1497571895163736070|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 2\n-------------------------------------------\n-------------------------------------------\nBatch: 13\n-------------------------------------------\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:58:...|geddes_tristan|RT @CryptoThro: I...|1497571900674899972|\n+--------------------+--------------+--------------------+-------------------+\n\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:58:...|geddes_tristan|RT @CryptoThro: I...|1497571900674899972|\n+--------------------+--------------+--------------------+-------------------+\n\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "                                                                                \r"
+          },
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 14\n-------------------------------------------\n-------------------------------------------\nBatch: 3\n-------------------------------------------\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|NANDISHPATEL11| $BTC pos vibes :/ ️|1497571903539916803|\n|Sat Feb 26 13:59:...|      Rezak611|RT @genelpatron01...|1497571903736791042|\n|Sat Feb 26 13:59:...|     mimi_nyce|We have the oppor...|1497571904714125314|\n|Sat Feb 26 13:59:...|  Bullish_Army|#BTC is going to ...|1497571904412012548|\n+--------------------+--------------+--------------------+-------------------+\n\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|NANDISHPATEL11| $BTC pos vibes :/ ️|1497571903539916803|\n|Sat Feb 26 13:59:...|      Rezak611|RT @genelpatron01...|1497571903736791042|\n+--------------------+--------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 4\n-------------------------------------------\n-------------------------------------------\nBatch: 15\n-------------------------------------------\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|    ErsovaTana|RT @Phemex_offici...|1497571905724895233|\n|Sat Feb 26 13:59:...|dark_horse1972|@nexta_tv please ...|1497571906177748995|\n|Sat Feb 26 13:59:...| cryptobushnft|RT @BabyZillaClub...|1497571906287022081|\n+--------------------+--------------+--------------------+-------------------+\n\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|     mimi_nyce|We have the oppor...|1497571904714125314|\n|Sat Feb 26 13:59:...|  Bullish_Army|#BTC is going to ...|1497571904412012548|\n|Sat Feb 26 13:59:...|    ErsovaTana|RT @Phemex_offici...|1497571905724895233|\n|Sat Feb 26 13:59:...|dark_horse1972|@nexta_tv please ...|1497571906177748995|\n|Sat Feb 26 13:59:...| cryptobushnft|RT @BabyZillaClub...|1497571906287022081|\n+--------------------+--------------+--------------------+-------------------+\n\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "\r\n[Stage 21:\u003e                                                         (0 + 1) / 1]\r\n\r\n                                                                                \r"
+          },
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 5\n-------------------------------------------\n-------------------------------------------\nBatch: 16\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|   vandarkk7|Check out my NFT ...|1497571910103846913|\n|Sat Feb 26 13:59:...|CryptoCapo_7|RT @CryptoCapo_: ...|1497571912666554373|\n+--------------------+------------+--------------------+-------------------+\n\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|   vandarkk7|Check out my NFT ...|1497571910103846913|\n|Sat Feb 26 13:59:...|CryptoCapo_7|RT @CryptoCapo_: ...|1497571912666554373|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 6\n-------------------------------------------\n-------------------------------------------\nBatch: 17\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|michael_tgim|Infinity #Trading...|1497571915086581766|\n|Sat Feb 26 13:59:...| sametaksu00|RT @Phemex_offici...|1497571915984261120|\n|Sat Feb 26 13:59:...| BrobotQueen|@idomgard ☆☆ PAST...|1497571915946504196|\n+--------------------+------------+--------------------+-------------------+\n\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|michael_tgim|Infinity #Trading...|1497571915086581766|\n|Sat Feb 26 13:59:...| sametaksu00|RT @Phemex_offici...|1497571915984261120|\n|Sat Feb 26 13:59:...| BrobotQueen|@idomgard ☆☆ PAST...|1497571915946504196|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 7\n-------------------------------------------\n-------------------------------------------\nBatch: 18\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|     mrkbl5|@stevedabitcoin C...|1497571919121592321|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|     mrkbl5|@stevedabitcoin C...|1497571919121592321|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 8\n-------------------------------------------\n-------------------------------------------\nBatch: 19\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Ezekiel_hub|RT @NervChain: He...|1497571922451869700|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Ezekiel_hub|RT @NervChain: He...|1497571922451869700|\n|Sat Feb 26 13:59:...|  bucc_na39|RT @carolecadwall...|1497571922984542216|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 20\n-------------------------------------------\n-------------------------------------------\nBatch: 9\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|      bucc_na39|RT @carolecadwall...|1497571922984542216|\n|Sat Feb 26 13:59:...|     ELMASUSTA1|RT @CRYPTOKOLIK14...|1497571924234407937|\n|Sat Feb 26 13:59:...|    kontrarecai|RT @CovalentTR: G...|1497571924821651461|\n|Sat Feb 26 13:59:...|  ZacharyGraves|RT @usleepwalker:...|1497571924901253127|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571924892798982|\n|Sat Feb 26 13:59:...|  DragonBallTee|https://t.co/mpOX...|1497571925056716803|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|     ELMASUSTA1|RT @CRYPTOKOLIK14...|1497571924234407937|\n|Sat Feb 26 13:59:...|    kontrarecai|RT @CovalentTR: G...|1497571924821651461|\n|Sat Feb 26 13:59:...|  ZacharyGraves|RT @usleepwalker:...|1497571924901253127|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571924892798982|\n|Sat Feb 26 13:59:...|  DragonBallTee|https://t.co/mpOX...|1497571925056716803|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 10\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|ydkambleliveco1|Trending on #Luna...|1497571925727809537|\n|Sat Feb 26 13:59:...|vUFFm3KrvQI8b05|RT @kamiya_en: 10...|1497571927853916160|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 21\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|ydkambleliveco1|Trending on #Luna...|1497571925727809537|\n|Sat Feb 26 13:59:...|vUFFm3KrvQI8b05|RT @kamiya_en: 10...|1497571927853916160|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 11\n-------------------------------------------\n-------------------------------------------\nBatch: 22\n-------------------------------------------\n+--------------------+---------------+-----------------------+-------------------+\n|          event_time|    screen_name|                   text|                 id|\n+--------------------+---------------+-----------------------+-------------------+\n|Sat Feb 26 13:59:...|israel_odebunmi|   RT @binance: Buy ...|1497571929561210884|\n|Sat Feb 26 13:59:...|     donqsj3001|   RT @RealPabloHema...|1497571929783472132|\n|Sat Feb 26 13:59:...|      lokidegen|   @cryptocom @Kitte...|1497571930345455620|\n|Sat Feb 26 13:59:...| RyanStanleyBTC|   RT @usleepwalker:...|1497571931255894023|\n|Sat Feb 26 13:59:...| takashi_taka46|RT @x7_rjx: 【🎁株王...|1497571931658211328|\n+--------------------+---------------+-----------------------+-------------------+\n\n+--------------------+---------------+-----------------------+-------------------+\n|          event_time|    screen_name|                   text|                 id|\n+--------------------+---------------+-----------------------+-------------------+\n|Sat Feb 26 13:59:...|israel_odebunmi|   RT @binance: Buy ...|1497571929561210884|\n|Sat Feb 26 13:59:...|     donqsj3001|   RT @RealPabloHema...|1497571929783472132|\n|Sat Feb 26 13:59:...|      lokidegen|   @cryptocom @Kitte...|1497571930345455620|\n|Sat Feb 26 13:59:...| RyanStanleyBTC|   RT @usleepwalker:...|1497571931255894023|\n|Sat Feb 26 13:59:...| takashi_taka46|RT @x7_rjx: 【🎁株王...|1497571931658211328|\n+--------------------+---------------+-----------------------+-------------------+\n\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 23\n-------------------------------------------\n-------------------------------------------\nBatch: 12\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  lele_fefef|OPEN FOR BIDS #ra...|1497571932430114823|\n|Sat Feb 26 13:59:...|eisenhiem143|Market is looking...|1497571934221275137|\n|Sat Feb 26 13:59:...|  selvi_asih|RT @IlseCrypto: I...|1497571934825234434|\n+--------------------+------------+--------------------+-------------------+\n\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  lele_fefef|OPEN FOR BIDS #ra...|1497571932430114823|\n|Sat Feb 26 13:59:...|eisenhiem143|Market is looking...|1497571934221275137|\n|Sat Feb 26 13:59:...|  selvi_asih|RT @IlseCrypto: I...|1497571934825234434|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 24\n-------------------------------------------\n-------------------------------------------\nBatch: 13\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571937224065026|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571937224065026|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 14\n-------------------------------------------\n+--------------------+-------------+--------------------+-------------------+\n|          event_time|  screen_name|                text|                 id|\n+--------------------+-------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| FabioFaccin1|RT @Token_Bae: $h...|1497571939967287301|\n|Sat Feb 26 13:59:...|trombosit2022|RT @IlseCrypto: I...|1497571940139401222|\n+--------------------+-------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 25\n-------------------------------------------\n+--------------------+-------------+--------------------+-------------------+\n|          event_time|  screen_name|                text|                 id|\n+--------------------+-------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| FabioFaccin1|RT @Token_Bae: $h...|1497571939967287301|\n|Sat Feb 26 13:59:...|trombosit2022|RT @IlseCrypto: I...|1497571940139401222|\n+--------------------+-------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 15\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  kingjab88|RT @THECULTCARDS:...|1497571943012257801|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 26\n-------------------------------------------\n-------------------------------------------\nBatch: 16\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| huseyinkanturk|Bunun #Btc üzerin...|1497571944010506241|\n|Sat Feb 26 13:59:...|         JWw202|Promote it on @Ch...|1497571943792332802|\n|Sat Feb 26 13:59:...|  TigerCrypto35|RT @kriptoholderc...|1497571945214361602|\n|Sat Feb 26 13:59:...|crypto_whispers|Top 5 #crypto pri...|1497571945411395587|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|     kingjab88|RT @THECULTCARDS:...|1497571943012257801|\n|Sat Feb 26 13:59:...|huseyinkanturk|Bunun #Btc üzerin...|1497571944010506241|\n|Sat Feb 26 13:59:...|        JWw202|Promote it on @Ch...|1497571943792332802|\n+--------------------+--------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 27\n-------------------------------------------\n-------------------------------------------\nBatch: 17\n-------------------------------------------\n+--------------------+---------------+-------------------------------------+-------------------+\n|          event_time|    screen_name|                                 text|                 id|\n+--------------------+---------------+-------------------------------------+-------------------+\n|Sat Feb 26 13:59:...|  TigerCrypto35|                 RT @kriptoholderc...|1497571945214361602|\n|Sat Feb 26 13:59:...|crypto_whispers|                 Top 5 #crypto pri...|1497571945411395587|\n|Sat Feb 26 13:59:...|  Love523749320|                 Promote it on @In...|1497571947370061828|\n|Sat Feb 26 13:59:...|   btcjpyMarket|現在の各取引所のマーケット情報をお...|1497571947244310529|\n+--------------------+---------------+-------------------------------------+-------------------+\n\n+--------------------+-------------+-------------------------------------+-------------------+\n|          event_time|  screen_name|                                 text|                 id|\n+--------------------+-------------+-------------------------------------+-------------------+\n|Sat Feb 26 13:59:...|Love523749320|                 Promote it on @In...|1497571947370061828|\n|Sat Feb 26 13:59:...| btcjpyMarket|現在の各取引所のマーケット情報をお...|1497571947244310529|\n+--------------------+-------------+-------------------------------------+-------------------+\n\n-------------------------------------------\nBatch: 18\n-------------------------------------------\n-------------------------------------------\nBatch: 28\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Caner_gltekin44|RT @CRYPTOKOLIK14...|1497571950260101131|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Caner_gltekin44|RT @CRYPTOKOLIK14...|1497571950260101131|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 19\n-------------------------------------------\n-------------------------------------------\nBatch: 29\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Nesliha44119864|RT @selo_crypto: ...|1497571953506504711|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571954244472834|\n|Sat Feb 26 13:59:...| A8888812398523|RT @AIRTDSX: #Air...|1497571954613788673|\n|Sat Feb 26 13:59:...|   Susano_Noble|RT @kishosamurai:...|1497571954928152576|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Nesliha44119864|RT @selo_crypto: ...|1497571953506504711|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571954244472834|\n|Sat Feb 26 13:59:...| A8888812398523|RT @AIRTDSX: #Air...|1497571954613788673|\n|Sat Feb 26 13:59:...|   Susano_Noble|RT @kishosamurai:...|1497571954928152576|\n+--------------------+---------------+--------------------+-------------------+\n\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 20\n-------------------------------------------\n-------------------------------------------\nBatch: 30\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|       donzain6|@metashibaglobal ...|1497571955788103680|\n|Sat Feb 26 13:59:...|  Money40750905|RT @MNFT0: 800€ P...|1497571956257918976|\n|Sat Feb 26 13:59:...|TeknikA27204282|\"Bilgi için: bors...|1497571956857704450|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|       donzain6|@metashibaglobal ...|1497571955788103680|\n|Sat Feb 26 13:59:...|  Money40750905|RT @MNFT0: 800€ P...|1497571956257918976|\n|Sat Feb 26 13:59:...|TeknikA27204282|\"Bilgi için: bors...|1497571956857704450|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 31\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|   tipsygws|RT @usleepwalker:...|1497571960716283904|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 21\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|   tipsygws|RT @usleepwalker:...|1497571960716283904|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 22\n-------------------------------------------\n-------------------------------------------\nBatch: 32\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| Coin2Share|Bitcoin (BTC/USD)...|1497571961740083202|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| Coin2Share|Bitcoin (BTC/USD)...|1497571961740083202|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 33\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| donqsj3001|RT @RealPabloHema...|1497571965099552770|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 23\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...| donqsj3001|RT @RealPabloHema...|1497571965099552770|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 34\n-------------------------------------------\n-------------------------------------------\nBatch: 24\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|cryptostheen|RT @usleepwalker:...|1497571965980188672|\n|Sat Feb 26 13:59:...|     77_tiar|I am very thankfu...|1497571966844223490|\n|Sat Feb 26 13:59:...|  samyank___|RT @ReginaColucci...|1497571966961676291|\n+--------------------+------------+--------------------+-------------------+\n\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|cryptostheen|RT @usleepwalker:...|1497571965980188672|\n|Sat Feb 26 13:59:...|     77_tiar|I am very thankfu...|1497571966844223490|\n|Sat Feb 26 13:59:...|  samyank___|RT @ReginaColucci...|1497571966961676291|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 35\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Itsuki1010im|RT @fxoldman0321:...|1497571968870395904|\n|Sat Feb 26 13:59:...|      LElkan|RT @Cointelegraph...|1497571969184583691|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 25\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|Itsuki1010im|RT @fxoldman0321:...|1497571968870395904|\n|Sat Feb 26 13:59:...|      LElkan|RT @Cointelegraph...|1497571969184583691|\n+--------------------+------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 36\n-------------------------------------------\n+--------------------+---------------+---------------------+-------------------+\n|          event_time|    screen_name|                 text|                 id|\n+--------------------+---------------+---------------------+-------------------+\n|Sat Feb 26 13:59:...|rzR8ZfVgjikKWwO|RT @TIPsWorlds: ＼...|1497571970136690691|\n+--------------------+---------------+---------------------+-------------------+\n\n-------------------------------------------\nBatch: 26\n-------------------------------------------\n+--------------------+---------------+---------------------+-------------------+\n|          event_time|    screen_name|                 text|                 id|\n+--------------------+---------------+---------------------+-------------------+\n|Sat Feb 26 13:59:...|rzR8ZfVgjikKWwO|RT @TIPsWorlds: ＼...|1497571970136690691|\n|Sat Feb 26 13:59:...|   bakaisei2780| RT @kamiya_en: 10...|1497571971361800193|\n+--------------------+---------------+---------------------+-------------------+\n\n-------------------------------------------\nBatch: 37\n-------------------------------------------\n-------------------------------------------\nBatch: 27\n-------------------------------------------\n+--------------------+------------+--------------------+-------------------+\n|          event_time| screen_name|                text|                 id|\n+--------------------+------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|bakaisei2780|RT @kamiya_en: 10...|1497571971361800193|\n|Sat Feb 26 13:59:...|   lokidegen|@AltCryptoGems @K...|1497571972502413312|\n+--------------------+------------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  lokidegen|@AltCryptoGems @K...|1497571972502413312|\n+--------------------+-----------+--------------------+-------------------+\n\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "-------------------------------------------\nBatch: 38\n-------------------------------------------\n-------------------------------------------\nBatch: 28\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|monokumaman|RT @papayapaya_FX...|1497571974733697034|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|monokumaman|RT @papayapaya_FX...|1497571974733697034|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 39\n-------------------------------------------\n-------------------------------------------\nBatch: 29\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|    maxymvs|RT @FedorovMykhai...|1497571977946710023|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|    maxymvs|RT @FedorovMykhai...|1497571977946710023|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 40\n-------------------------------------------\n-------------------------------------------\nBatch: 30\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|    77_tiar|I am very thankfu...|1497571979922051075|\n+--------------------+-----------+--------------------+-------------------+\n\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|    77_tiar|I am very thankfu...|1497571979922051075|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 41\n-------------------------------------------\n-------------------------------------------\nBatch: 31\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|JellyBe29532358|Promote it on @Ma...|1497571982464139265|\n|Sat Feb 26 13:59:...|RuiMMMonteiro16|RT @TimeNha: #Fau...|1497571982799482880|\n+--------------------+---------------+--------------------+-------------------+\n\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|JellyBe29532358|Promote it on @Ma...|1497571982464139265|\n|Sat Feb 26 13:59:...|RuiMMMonteiro16|RT @TimeNha: #Fau...|1497571982799482880|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 42\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|        2basiic|Zooming in close ...|1497571983231492103|\n|Sat Feb 26 13:59:...|    BrobotQueen|@MetaLadies_ ☆☆ P...|1497571983378296839|\n|Sat Feb 26 13:59:...|ramazan34678293|@Supersol__ @Fier...|1497571984334594060|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571986289016836|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 32\n-------------------------------------------\n+--------------------+---------------+--------------------+-------------------+\n|          event_time|    screen_name|                text|                 id|\n+--------------------+---------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|        2basiic|Zooming in close ...|1497571983231492103|\n|Sat Feb 26 13:59:...|    BrobotQueen|@MetaLadies_ ☆☆ P...|1497571983378296839|\n|Sat Feb 26 13:59:...|ramazan34678293|@Supersol__ @Fier...|1497571984334594060|\n|Sat Feb 26 13:59:...|CryptoL24237730|I am very thankfu...|1497571986289016836|\n+--------------------+---------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 33\n-------------------------------------------\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  CyberLightGS|‼️ REPOST‼️\nSuppo...|1497571987605966853|\n|Sat Feb 26 13:59:...|   aWESome182_|RT @CiccioMadonna...|1497571987669266432|\n|Sat Feb 26 13:59:...|4M_Mak_Samurai|RT @Shido_samurai...|1497571988130435072|\n+--------------------+--------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 43\n-------------------------------------------\n+--------------------+--------------+--------------------+-------------------+\n|          event_time|   screen_name|                text|                 id|\n+--------------------+--------------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|  CyberLightGS|‼️ REPOST‼️\nSuppo...|1497571987605966853|\n|Sat Feb 26 13:59:...|   aWESome182_|RT @CiccioMadonna...|1497571987669266432|\n|Sat Feb 26 13:59:...|4M_Mak_Samurai|RT @Shido_samurai...|1497571988130435072|\n+--------------------+--------------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 44\n-------------------------------------------\n+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|MotinMaliha|#Orijin #Polygon ...|1497571988889485317|\n|Sat Feb 26 13:59:...|MrEmreTrade|Piyasayı yapanlar...|1497571989501853704|\n+--------------------+-----------+--------------------+-------------------+\n\n-------------------------------------------\nBatch: 34\n-------------------------------------------\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "KeyboardInterrupt\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-----------+--------------------+-------------------+\n|          event_time|screen_name|                text|                 id|\n+--------------------+-----------+--------------------+-------------------+\n|Sat Feb 26 13:59:...|MotinMaliha|#Orijin #Polygon ...|1497571988889485317|\n|Sat Feb 26 13:59:...|MrEmreTrade|Piyasayı yapanlar...|1497571989501853704|\n+--------------------+-----------+--------------------+-------------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572724_73520765",
+      "id": "20221221-001252_632796251",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00273\u0027\u003e\u003c/a\u003e\n## 3. Finalize the exercise\n\nIt\u0027s always good to terminate things properly to avoid any kind of corruption.",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.724",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00273\u0027\u003e\u003c/a\u003e\n\u003ch2\u003e3. Finalize the exercise\u003c/h2\u003e\n\u003cp\u003eIt\u0026rsquo;s always good to terminate things properly to avoid any kind of corruption.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572724_106320067",
+      "id": "20221221-001252_575535624",
+      "dateCreated": "2022-12-21 00:12:52.724",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00273.1\u0027\u003e\u003c/a\u003e\n### 3.1 Stop the Spark Streaming application\nIn order to stop the Spark Streaming application go to **Kernel -\u003e Shutdown**, that\u0027s it!",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.725",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00273.1\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e3.1 Stop the Spark Streaming application\u003c/h3\u003e\n\u003cp\u003eIn order to stop the Spark Streaming application go to \u003cstrong\u003eKernel -\u0026gt; Shutdown\u003c/strong\u003e, that\u0026rsquo;s it!\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572725_334110591",
+      "id": "20221221-001252_1578687399",
+      "dateCreated": "2022-12-21 00:12:52.725",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00273.2\u0027\u003e\u003c/a\u003e\n### 3.2 Stop the Kafka producer\nGo to the terminal where you started the producer and **press Ctrl + C**, it\u0027s that easy!",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.725",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00273.2\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e3.2 Stop the Kafka producer\u003c/h3\u003e\n\u003cp\u003eGo to the terminal where you started the producer and \u003cstrong\u003epress Ctrl + C\u003c/strong\u003e, it\u0026rsquo;s that easy!\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572725_348054486",
+      "id": "20221221-001252_1373393244",
+      "dateCreated": "2022-12-21 00:12:52.725",
+      "status": "READY"
+    },
+    {
+      "text": "%md\n\u003ca id\u003d\u00273.3\u0027\u003e\u003c/a\u003e\n### 3.3 Stop the Kafka service\n\u003cp\u003eGo to a terminal windows and type the following command:\u003c/p\u003e\n\u003cem\u003e$ sudo service kafka stop\u003c/em\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 00:12:52.725",
+      "progress": 0,
+      "config": {
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        }
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ca id\u003d\u00273.3\u0027\u003e\u003c/a\u003e\n\u003ch3\u003e3.3 Stop the Kafka service\u003c/h3\u003e\n\u003cp\u003eGo to a terminal windows and type the following command:\u003c/p\u003e\n\u003cem\u003e$ sudo service kafka stop\u003c/em\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671581572725_970648662",
+      "id": "20221221-001252_1224834339",
+      "dateCreated": "2022-12-21 00:12:52.725",
+      "status": "READY"
+    }
+  ],
+  "name": "Python 3 (ipykernel)",
+  "id": "2HPT4BK8M",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

@@ -1,0 +1,1054 @@
+{
+  "paragraphs": [
+    {
+      "text": "%pyspark\nimport time\nimport datetime\nimport tweepy\nfrom textblob import TextBlob\nfrom kafka import KafkaProducer\nfrom json import dumps\n \nimport pandas as pd\nfrom datetime import date\n\n\n\n#cedentials Tweete API\n\nCONSUMER_KEY \u003d \"C7jP0MlDhChWFItYx4vL0GyjP\"\nCONSUMER_SECRET \u003d \"qYQkVuPYkzcIs8eokQwznVamhqiOUzbhjejypjwXVYoWrmhPWa\"\nACCESS_TOKEN \u003d \"1585914093101359105-0JnYrYTA0jQap9aQ7KPEIoSI2vkklm\"\nACCESS_TOKEN_SECRET \u003d \"agvWZ19hcJERHAH328s9IuGa7I8jlOF3rOl5ZG3CXn8rC\"\n\n#stream function\ndata \u003d []\ndef stream(interval):\n    while True:\n\n        def json_serial(obj):\n            \"\"\"JSON serializer for objects not serializable by default json code\"\"\"\n        \n            if isinstance(obj, (datetime, datetime.date)):\n                return obj.isoformat()\n            raise TypeError(\"Type %s not serializable\" % type(obj))\n        #authentification to tweeter\n        \n        auth \u003d tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)\n        auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)\n        \n        #kafka profucer config {localhost}\n        \n        producer \u003d KafkaProducer(bootstrap_servers\u003d[\u0027192.168.96.76:9092\u0027],value_serializer\u003dlambda K:dumps(K,default\u003djson_serial).encode(\u0027utf-8\u0027))\n        \n        #columns of tweets informations in the         \n        columns \u003d [\u0027PublishedDate\u0027, \u0027User\u0027,\u0027Sentence\u0027,\u0027NumberofTweets\u0027]\n        #la table ou stocker chaque tweet stream\n        \n        api \u003d tweepy.API(auth)\n        cursor \u003d tweepy.Cursor(api.search_tweets,q\u003d\"fifa\",tweet_mode\u003d\u0027extended\u0027).items(20)\n        for tweet in cursor:\n           #Print the users of the tweets\n           print(tweet.user.screen_name)\n           #Print the users of the tweets\n           producer.send(\u0027streamTopic\u0027,[tweet.full_text,tweet.user.screen_name,tweet.user.statuses_count])\n           data.append([tweet.created_at, tweet.user.screen_name,tweet.full_text,tweet.user.statuses_count])\n        df \u003d pd.DataFrame(data, columns\u003dcolumns)\n        print(df)\n        today \u003d date.today()\n        d1 \u003d today.strftime(\"%d-%m-%Y\")\n        filename \u003d \"tweets\"+d1+\u0027.parquet.gzip\u0027\n        df.to_parquet(filename)\n        time.sleep(interval)\n\n       \nstream(3)  # streaming frequency",
+      "user": "anonymous",
+      "dateUpdated": "2023-01-01 09:58:59.343",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672567116463_166202741",
+      "id": "paragraph_1672567116463_166202741",
+      "dateCreated": "2023-01-01 09:58:36.463",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark import SparkContext,SparkConf\nfrom pyspark.sql import SparkSession\n\n\nappName\u003d \"hive_pyspark\"\n        \nconf\u003dSparkConf()\nscc\u003dSparkContext.getOrCreate(conf\u003dconf)\nspark \u003d SparkSession(scc).builder.appName(appName).config(\"hive.metastore.uris\",\"thrift://hive-metastore:9083\").enableHiveSupport().getOrCreate()\n        \nr1\u003d[]\nr2\u003d[]\nr3\u003d[]\nr4\u003d[]\nr5\u003d[]\nr6\u003d[]\n         \ntweet\u003dspark.read.parquet(\"tweets21-12-2022.parquet.gzip\")\n\ntweet.show(40)",
+      "user": "anonymous",
+      "dateUpdated": "2023-01-01 09:59:08.521",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672567115940_1380221209",
+      "id": "paragraph_1672567115940_1380221209",
+      "dateCreated": "2023-01-01 09:58:35.941",
+      "status": "READY"
+    },
+    {
+      "text": "%pyspark\n\ntweet.write.format(\"parquet\").saveAsTable(\"tweettsparquet\")",
+      "user": "anonymous",
+      "dateUpdated": "2023-01-01 09:59:31.534",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672567115328_503971373",
+      "id": "paragraph_1672567115328_503971373",
+      "dateCreated": "2023-01-01 09:58:35.328",
+      "status": "READY"
+    },
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672567114827_208887602",
+      "id": "paragraph_1672567114827_208887602",
+      "dateCreated": "2023-01-01 09:58:34.827",
+      "status": "READY"
+    },
+    {
+      "user": "anonymous",
+      "progress": 0,
+      "config": {},
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1672567114085_947013502",
+      "id": "paragraph_1672567114085_947013502",
+      "dateCreated": "2023-01-01 09:58:34.085",
+      "status": "READY"
+    },
+    {
+      "text": "Getting data",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-09 18:46:38.357",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 14.0,
+        "results": {},
+        "enabled": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670535502905_450553098",
+      "id": "paragraph_1670535502905_450553098",
+      "dateCreated": "2022-12-08 21:38:22.905",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.sql.functions import monotonically_increasing_id",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-13 23:02:06.719",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670972397871_687959283",
+      "id": "paragraph_1670972397871_687959283",
+      "dateCreated": "2022-12-13 22:59:57.872",
+      "dateStarted": "2022-12-13 23:02:06.732",
+      "dateFinished": "2022-12-13 23:02:06.949",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nimport time\nfrom pyspark import SparkContext,SparkConf\nfrom pyspark.sql import SparkSession\n\nappName\u003d \"hive_pyspark\"\n\nconf\u003dSparkConf()\nsc\u003dSparkContext.getOrCreate(conf\u003dconf)\nspark \u003d SparkSession(sc).builder.appName(appName).config(\"hive.metastore.uris\",\"thrift://hive-metastore:9083\").enableHiveSupport().getOrCreate()\n\nr1\u003d[]\nr2\u003d[]\nr3\u003d[]\nr4\u003d[]\nr5\u003d[]\nr6\u003d[]\n\ndf\u003dspark.read.csv(\"data.csv\",header\u003d\u0027true\u0027)\ndf.show()\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:10:07.583",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+---------+\n|            Sentence|Sentiment|\n+--------------------+---------+\n|The GeoSolutions ...| positive|\n|$ESI on lows, dow...| negative|\n|For the last quar...| positive|\n|According to the ...|  neutral|\n|The Swedish buyou...|  neutral|\n|$SPY wouldn\u0027t be ...| positive|\n|Shell\u0027s $70 Billi...| negative|\n|SSH COMMUNICATION...| negative|\n|Kone \u0027s net sales...| positive|\n|The Stockmann dep...|  neutral|\n|Circulation reven...| positive|\n|$SAP Q1 disappoin...| negative|\n|The subdivision m...| positive|\n|Viking Line has c...|  neutral|\n|Ahlstrom Corporat...|  neutral|\n|$FB gone green on...| positive|\n|$MSFT SQL Server ...| positive|\n|According to L+ñn...|  neutral|\n|The company \u0027s sh...|  neutral|\n|Elcoteq SE is lis...|  neutral|\n+--------------------+---------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d199"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d200"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670535177544_36597872",
+      "id": "paragraph_1670535177544_36597872",
+      "dateCreated": "2022-12-08 21:32:57.544",
+      "dateStarted": "2022-12-21 10:10:07.604",
+      "dateFinished": "2022-12-21 10:10:07.978",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\ndf \u003d df.dropna()\ndf.count()",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 09:26:33.909",
+      "progress": 100,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "5842"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d65"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670536094638_577955044",
+      "id": "paragraph_1670536094638_577955044",
+      "dateCreated": "2022-12-08 21:48:14.639",
+      "dateStarted": "2022-12-21 09:26:33.922",
+      "dateFinished": "2022-12-21 09:26:34.291",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n(train_set, val_set, test_set) \u003d df.randomSplit([0.98, 0.01, 0.01], seed \u003d 2000)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 09:26:35.768",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670536219973_1393334436",
+      "id": "paragraph_1670536219973_1393334436",
+      "dateCreated": "2022-12-08 21:50:19.973",
+      "dateStarted": "2022-12-21 09:26:35.788",
+      "dateFinished": "2022-12-21 09:26:36.006",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.ml.feature import HashingTF, IDF, Tokenizer\nfrom pyspark.ml.feature import StringIndexer\nfrom pyspark.ml import Pipeline\n\ntokenizer \u003d Tokenizer(inputCol\u003d\"Sentence\", outputCol\u003d\"words\")\nhashtf \u003d HashingTF(numFeatures\u003d2**16, inputCol\u003d\"words\", outputCol\u003d\u0027tf\u0027)\nidf \u003d IDF(inputCol\u003d\u0027tf\u0027, outputCol\u003d\"features\", minDocFreq\u003d5) #minDocFreq: remove sparse terms\nlabel_stringIdx \u003d StringIndexer(inputCol \u003d \"Sentiment\", outputCol \u003d \"label\")\npipeline \u003d Pipeline(stages\u003d[tokenizer, hashtf, idf, label_stringIdx])\n\npipelineFit \u003d pipeline.fit(train_set)\ntrain_df \u003d pipelineFit.transform(train_set)\nval_df \u003d pipelineFit.transform(val_set)\ntrain_df.show()\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:10:22.255",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+--------------------+--------------------+--------------------+-----+\n|            Sentence|           Sentiment|               words|                  tf|            features|label|\n+--------------------+--------------------+--------------------+--------------------+--------------------+-----+\n|\"$SINA even thoug...| the damage is do...|[\"$sina, even, th...|(65536,[731,9019,...|(65536,[731,9019,...|  3.0|\n|\"$SPY Less than 0...|            negative|[\"$spy, less, tha...|(65536,[4009,5377...|(65536,[4009,5377...|  2.0|\n|\"$pcln back over ...|            positive|[\"$pcln, back, ov...|(65536,[1198,6889...|(65536,[1198,6889...|  1.0|\n|\"2nd raise this y...|            positive|[\"2nd, raise, thi...|(65536,[1156,8911...|(65536,[1156,8911...|  1.0|\n|\"@BrooklynBandit:...|            positive|[\"@brooklynbandit...|(65536,[11605,158...|(65536,[11605,158...|  1.0|\n|\"FBR Capital reit...|            positive|[\"fbr, capital, r...|(65536,[9639,1007...|(65536,[9639,1007...|  1.0|\n|\"Micron Technolog...|            negative|[\"micron, technol...|(65536,[9506,1032...|(65536,[9506,1032...|  2.0|\n|#Apple breaks maj...|            negative|[#apple, breaks, ...|(65536,[8436,1160...|(65536,[8436,1160...|  2.0|\n|#Apple up almost ...|            positive|[#apple, up, almo...|(65536,[3283,8125...|(65536,[3283,8125...|  1.0|\n|#Fintech provider...|            positive|[#fintech, provid...|(65536,[5964,1282...|(65536,[5964,1282...|  1.0|\n|#FusionIQ NEW Pos...|            positive|[#fusioniq, new, ...|(65536,[12822,255...|(65536,[12822,255...|  1.0|\n|#LongPos $TSLA 25...|            positive|[#longpos, $tsla,...|(65536,[12,1667,3...|(65536,[12,1667,3...|  1.0|\n|#NDX component Te...|            negative|[#ndx, component,...|(65536,[6946,1387...|(65536,[6946,1387...|  2.0|\n|#Tesla Model S de...|            positive|[#tesla, model, s...|(65536,[1920,3834...|(65536,[1920,3834...|  1.0|\n|#Tesla: Model X R...|            negative|[#tesla:, model, ...|(65536,[3171,6946...|(65536,[3171,6946...|  2.0|\n|$AAPL  downgrade ...|            positive|[$aapl, , downgra...|(65536,[15889,308...|(65536,[15889,308...|  1.0|\n|$AAPL $131 rally ...|            positive|[$aapl, $131, ral...|(65536,[11084,363...|(65536,[11084,363...|  1.0|\n|$AAPL - Has broke...|            positive|[$aapl, -, has, b...|(65536,[5559,7687...|(65536,[5559,7687...|  1.0|\n|$AAPL 50DMA turne...|            positive|[$aapl, 50dma, tu...|(65536,[1203,9129...|(65536,[1203,9129...|  1.0|\n|$AAPL 620 resista...|             neutral|[$aapl, 620, resi...|(65536,[14625,363...|(65536,[14625,363...|  0.0|\n+--------------------+--------------------+--------------------+--------------------+--------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d201"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d202"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d203"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670536678847_421094571",
+      "id": "paragraph_1670536678847_421094571",
+      "dateCreated": "2022-12-08 21:57:58.847",
+      "dateStarted": "2022-12-21 10:10:22.277",
+      "dateFinished": "2022-12-21 10:10:23.254",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nval_df.show()",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 09:26:43.661",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+---------+--------------------+--------------------+--------------------+-----+\n|            Sentence|Sentiment|               words|                  tf|            features|label|\n+--------------------+---------+--------------------+--------------------+--------------------+-----+\n|$SMH got a sell s...| negative|[$smh, got, a, se...|(65536,[750,1251,...|(65536,[750,1251,...|  2.0|\n|( ADP News ) - Fe...|  neutral|[(, adp, news, ),...|(65536,[732,1536,...|(65536,[732,1536,...|  0.0|\n|( ADPnews ) - Feb...|  neutral|[(, adpnews, ), -...|(65536,[732,1251,...|(65536,[732,1251,...|  0.0|\n|@louiebeene vwap ...| positive|[@louiebeene, vwa...|(65536,[8870,9639...|(65536,[8870,9639...|  1.0|\n|A filter is used ...|  neutral|[a, filter, is, u...|(65536,[1536,2071...|(65536,[1536,2071...|  0.0|\n|A new Kveyt light...| positive|[a, new, kveyt, l...|(65536,[1536,8436...|(65536,[1536,8436...|  1.0|\n|According to the ...|  neutral|[according, to, t...|(65536,[589,1536,...|(65536,[589,1536,...|  0.0|\n|Aldata said that ...|  neutral|[aldata, said, th...|(65536,[1536,2408...|(65536,[1536,2408...|  0.0|\n|As capacity was c...|  neutral|[as, capacity, wa...|(65536,[546,1536,...|(65536,[546,1536,...|  0.0|\n|At 10.33 am , Huh...| negative|[at, 10.33, am, ,...|(65536,[1536,3764...|(65536,[1536,3764...|  2.0|\n|BasWare Order Mat...|  neutral|[basware, order, ...|(65536,[1536,2182...|(65536,[1536,2182...|  0.0|\n|COMPTEL CORPORATI...|  neutral|[comptel, corpora...|(65536,[1536,1766...|(65536,[1536,1766...|  0.0|\n|Dutch publisher D...|  neutral|[dutch, publisher...|(65536,[1536,4362...|(65536,[1536,4362...|  0.0|\n|EUR928 ,000 in Q1...| positive|[eur928, ,000, in...|(65536,[732,1364,...|(65536,[732,1364,...|  1.0|\n|EuroChem CFO Andr...| positive|[eurochem, cfo, a...|(65536,[211,1536,...|(65536,[211,1536,...|  1.0|\n|Finland-based int...|  neutral|[finland-based, i...|(65536,[261,732,1...|(65536,[261,732,1...|  0.0|\n|Finnish forest ma...| negative|[finnish, forest,...|(65536,[1536,1634...|(65536,[1536,1634...|  2.0|\n|Following the tra...| positive|[following, the, ...|(65536,[1536,7658...|(65536,[1536,7658...|  1.0|\n|He said he has be...|  neutral|[he, said, he, ha...|(65536,[1536,2888...|(65536,[1536,2888...|  0.0|\n|Image data produc...|  neutral|[image, data, pro...|(65536,[312,1134,...|(65536,[312,1134,...|  0.0|\n+--------------------+---------+--------------------+--------------------+--------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d69"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670543594370_1842176905",
+      "id": "paragraph_1670543594370_1842176905",
+      "dateCreated": "2022-12-08 23:53:14.370",
+      "dateStarted": "2022-12-21 09:26:43.680",
+      "dateFinished": "2022-12-21 09:26:44.105",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\nfrom pyspark import SparkContext,SparkConf\nfrom pyspark.sql import SparkSession\n\n\nappName\u003d \"hive_pyspark\"\n        \nconf\u003dSparkConf()\nscc\u003dSparkContext.getOrCreate(conf\u003dconf)\nspark \u003d SparkSession(scc).builder.appName(appName).config(\"hive.metastore.uris\",\"thrift://hive-metastore:9083\").enableHiveSupport().getOrCreate()\n        \nr1\u003d[]\nr2\u003d[]\nr3\u003d[]\nr4\u003d[]\nr5\u003d[]\nr6\u003d[]\n         \ntweet\u003dspark.read.parquet(\"tweets21-12-2022.parquet.gzip\")\n\ntweet.show(40)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:10:46.402",
+      "progress": 0,
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+---------------+--------------------+--------------+\n|      PublishedDate|           User|            Sentence|NumberofTweets|\n+-------------------+---------------+--------------------+--------------+\n|2022-12-21 10:04:33| Sureshthalafan|RT @RVCJ_FB: FIFA...|         80169|\n|2022-12-21 10:04:32|     stargurlgp|RT @FARPostZA: 𝐆...|         11310|\n|2022-12-21 10:04:31|     Kunalsaha_|RT @Iamabrar87: @...|           317|\n|2022-12-21 10:04:30| Hariramkoushik|RT @DeependraSonk...|         63771|\n|2022-12-21 10:04:30|FerdinandAmeyi1|I will keep on sa...|            81|\n|2022-12-21 10:04:29|       nsendula|Classement tempor...|         27920|\n|2022-12-21 10:04:29|     syazanatwt|RT @Dexerto: FIFA...|         32003|\n|2022-12-21 10:04:27|ahmdalk94510077|RT @SeCommittee20...|         28642|\n|2022-12-21 10:04:27|    AbsoluTabou|RT @MarocDiplomat...|         27494|\n|2022-12-21 10:04:27|       shawnumo|RT @SavvyRinu: @N...|          8960|\n|2022-12-21 10:04:27|    MattMoroder|Qatar’s Backing O...|         38634|\n|2022-12-21 10:04:27|       jezuzo20|RT @Dexerto: FIFA...|         31025|\n|2022-12-21 10:04:25|   LesoirSports|🇧🇪 ⚽🇧🇪 Mauvai...|        127573|\n|2022-12-21 10:04:24| BoanergeNnamdi|RT @stats_feed: M...|         33391|\n|2022-12-21 10:04:23|   HELPDESK_011|RT @TimelineCR7: ...|          2321|\n|2022-12-21 10:04:23|       journoyt|@newcastleherald ...|         11722|\n|2022-12-21 10:04:22|Chandra29515079|RT @RVCJ_FB: FIFA...|           349|\n|2022-12-21 10:04:22|  BarcaPolskaPL|Nawet FIFA już wi...|          1856|\n|2022-12-21 10:04:21|  CorsicoMaximo|RT @RTErdogan: Fe...|         14736|\n|2022-12-21 10:04:19|  ChelseaReddit|Kylian Mbappe on ...|         58819|\n|2022-12-21 10:05:05| CastroNicolhas|RT @sbc_tips: 💰 ...|           117|\n|2022-12-21 10:05:05|DesireSinclair1|RT @SavvyRinu: @N...|         44557|\n|2022-12-21 10:05:05|       Rex__Xie|RT @SavvyRinu: @N...|         20683|\n|2022-12-21 10:05:05|  Cheongpo_muk_|RT @Dexerto: FIFA...|         47470|\n|2022-12-21 10:05:04|    ElPatron350|@naemlexD1 @Khaye...|          4988|\n|2022-12-21 10:05:04|    Yasnajmanil|RT @HespressFr: L...|          1474|\n|2022-12-21 10:05:03|Sensei_Zucchini|RT @SavvyRinu: @N...|        153434|\n|2022-12-21 10:05:03|   jo1934edunom|RT @jo1934edunom:...|         22952|\n|2022-12-21 10:05:02|    pernile2017|RT @Jungkook__IND...|        602654|\n|2022-12-21 10:05:02|theamazingkamal|RT @oyimzy: NFF e...|         89866|\n|2022-12-21 10:05:02|  itsmrgeoffrey|RT @terryflewers:...|         44246|\n|2022-12-21 10:05:02|   umai_umaibou|RT @LIVERPOOL2991...|          6608|\n|2022-12-21 10:05:01|      AGokcukur|RT @RTErdogan: Fe...|         38506|\n|2022-12-21 10:05:01|yousifbinhammad|RT @FOXSoccer: Mo...|         12100|\n|2022-12-21 10:05:01|    NieR_Sakura|RT @ParionsSport:...|            17|\n|2022-12-21 10:05:00|       PataedeQ|@FCButters Notre ...|          3013|\n|2022-12-21 10:04:59|adenawo_timothy|RT @Cristiano: Th...|         16010|\n|2022-12-21 10:04:59|ShivamT32179623|वाह दीदी वाह आप क...|           294|\n|2022-12-21 10:04:59|    MattMoroder|@RepAdamSchiff Qa...|         38635|\n|2022-12-21 10:04:59|     Naderrosta|RT @MadridXtra: F...|         20528|\n+-------------------+---------------+--------------------+--------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d204"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d205"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1670972069014_1398384598",
+      "id": "paragraph_1670972069014_1398384598",
+      "dateCreated": "2022-12-13 22:54:29.014",
+      "dateStarted": "2022-12-21 10:10:46.423",
+      "dateFinished": "2022-12-21 10:10:46.807",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 09:32:07.235",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671614817991_431793829",
+      "id": "paragraph_1671614817991_431793829",
+      "dateCreated": "2022-12-21 09:26:57.991",
+      "dateStarted": "2022-12-21 09:28:25.886",
+      "dateFinished": "2022-12-21 09:28:26.106",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\n\nfrom pyspark.ml.classification import LogisticRegression\nlr \u003d LogisticRegression(maxIter\u003d100)\nlrModel \u003d lr.fit(train_df)\npredictionsLr \u003d lrModel.transform(val_df)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:11:07.131",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d206"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d207"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d208"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d209"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d210"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d211"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d212"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d213"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d214"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d215"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d216"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d217"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d218"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d219"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d220"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d221"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d222"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d223"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d224"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d225"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d226"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d227"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d228"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d229"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d230"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d231"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d232"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d233"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d234"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d235"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d236"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d237"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d238"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d239"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d240"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d241"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d242"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d243"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d244"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d245"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d246"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d247"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d248"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d249"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d250"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d251"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d252"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d253"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d254"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d255"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d256"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d257"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d258"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d259"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d260"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d261"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d262"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d263"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d264"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d265"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d266"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d267"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d268"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d269"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d270"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d271"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d272"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d273"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d274"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d275"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d276"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d277"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d278"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d279"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d280"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d281"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d282"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d283"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d284"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d285"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d286"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d287"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d288"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d289"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d290"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d291"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d292"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d293"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d294"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d295"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d296"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d297"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d298"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d299"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d300"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d301"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d302"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d303"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d304"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d305"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d306"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d307"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d308"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d309"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d310"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d311"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d312"
+            },
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d313"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671614898831_1131432281",
+      "id": "paragraph_1671614898831_1131432281",
+      "dateCreated": "2022-12-21 09:28:18.831",
+      "dateStarted": "2022-12-21 10:11:07.151",
+      "dateFinished": "2022-12-21 10:11:17.520",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\ntweetset \u003d pipelineFit.transform(tweet)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:11:28.845",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671614985474_2141491039",
+      "id": "paragraph_1671614985474_2141491039",
+      "dateCreated": "2022-12-21 09:29:45.474",
+      "dateStarted": "2022-12-21 10:11:28.866",
+      "dateFinished": "2022-12-21 10:11:29.132",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\npredictionsTweet \u003d lrModel.transform(tweetset)",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:11:37.356",
+      "progress": 0,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671615268044_995035173",
+      "id": "paragraph_1671615268044_995035173",
+      "dateCreated": "2022-12-21 09:34:28.044",
+      "dateStarted": "2022-12-21 10:11:37.378",
+      "dateFinished": "2022-12-21 10:11:37.596",
+      "status": "FINISHED"
+    },
+    {
+      "text": "%pyspark\npredictionsTweet.show()",
+      "user": "anonymous",
+      "dateUpdated": "2022-12-21 10:11:39.844",
+      "progress": 100,
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------------------+---------------+--------------------+--------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+\n|      PublishedDate|           User|            Sentence|NumberofTweets|               words|                  tf|            features|       rawPrediction|         probability|prediction|\n+-------------------+---------------+--------------------+--------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+\n|2022-12-21 10:04:33| Sureshthalafan|RT @RVCJ_FB: FIFA...|         80169|[rt, @rvcj_fb:, f...|(65536,[9639,2028...|(65536,[9639,2028...|[-16.549478042454...|[9.78559645330394...|       1.0|\n|2022-12-21 10:04:32|     stargurlgp|RT @FARPostZA: 𝐆...|         11310|[rt, @farpostza:,...|(65536,[1444,4303...|(65536,[1444,4303...|[-4.1348523269096...|[2.33352063807758...|       1.0|\n|2022-12-21 10:04:31|     Kunalsaha_|RT @Iamabrar87: @...|           317|[rt, @iamabrar87:...|(65536,[6637,8436...|(65536,[6637,8436...|[-6.1935228977806...|[5.52607050710459...|       1.0|\n|2022-12-21 10:04:30| Hariramkoushik|RT @DeependraSonk...|         63771|[rt, @deependraso...|(65536,[3200,6208...|(65536,[3200,6208...|[0.27238222768452...|[0.02436965331478...|       2.0|\n|2022-12-21 10:04:30|FerdinandAmeyi1|I will keep on sa...|            81|[i, will, keep, o...|(65536,[4302,6546...|(65536,[4302,6546...|[9.58085636698093...|[0.99612910952084...|       0.0|\n|2022-12-21 10:04:29|       nsendula|Classement tempor...|         27920|[classement, temp...|(65536,[6393,1833...|(65536,[6393,1833...|[5.62034996565496...|[1.84907995203901...|       2.0|\n|2022-12-21 10:04:29|     syazanatwt|RT @Dexerto: FIFA...|         32003|[rt, @dexerto:, f...|(65536,[8436,1588...|(65536,[8436,1588...|[2.69783887789084...|[0.07377955492963...|       1.0|\n|2022-12-21 10:04:27|ahmdalk94510077|RT @SeCommittee20...|         28642|[rt, @secommittee...|(65536,[7128,1117...|(65536,[7128,1117...|[-1.8840024675747...|[0.00101048977077...|       2.0|\n|2022-12-21 10:04:27|    AbsoluTabou|RT @MarocDiplomat...|         27494|[rt, @marocdiplom...|(65536,[2260,7093...|(65536,[2260,7093...|[5.31744079006884...|[7.14044099526347...|       2.0|\n|2022-12-21 10:04:27|       shawnumo|RT @SavvyRinu: @N...|          8960|[rt, @savvyrinu:,...|(65536,[1444,6508...|(65536,[1444,6508...|[-0.7993552565057...|[4.70863464877439...|       1.0|\n|2022-12-21 10:04:27|    MattMoroder|Qatar’s Backing O...|         38634|[qatar’s, backing...|(65536,[9559,9639...|(65536,[9559,9639...|[-13.875522357662...|[5.40256111486080...|       1.0|\n|2022-12-21 10:04:27|       jezuzo20|RT @Dexerto: FIFA...|         31025|[rt, @dexerto:, f...|(65536,[8436,1588...|(65536,[8436,1588...|[2.69783887789084...|[0.07377955492963...|       1.0|\n|2022-12-21 10:04:25|   LesoirSports|🇧🇪 ⚽🇧🇪 Mauvai...|        127573|[🇧🇪, ⚽🇧🇪, mau...|(65536,[3763,3907...|(65536,[3763,3907...|[-1.9852788050670...|[9.53269719051178...|       1.0|\n|2022-12-21 10:04:24| BoanergeNnamdi|RT @stats_feed: M...|         33391|[rt, @stats_feed:...|(65536,[2989,4089...|(65536,[2989,4089...|[-1.4573778897009...|[0.00186377468071...|       1.0|\n|2022-12-21 10:04:23|   HELPDESK_011|RT @TimelineCR7: ...|          2321|[rt, @timelinecr7...|(65536,[6693,9318...|(65536,[6693,9318...|[10.6389705650307...|[0.99999289458724...|       0.0|\n|2022-12-21 10:04:23|       journoyt|@newcastleherald ...|         11722|[@newcastleherald...|(65536,[10609,116...|(65536,[10609,116...|[1.83019520546981...|[0.10040959659839...|       2.0|\n|2022-12-21 10:04:22|Chandra29515079|RT @RVCJ_FB: FIFA...|           349|[rt, @rvcj_fb:, f...|(65536,[9639,2028...|(65536,[9639,2028...|[-16.549478042454...|[9.78559645330394...|       1.0|\n|2022-12-21 10:04:22|  BarcaPolskaPL|Nawet FIFA już wi...|          1856|[nawet, fifa, już...|(65536,[2448,2742...|(65536,[2448,2742...|[0.93243499355692...|[0.12134730102525...|       1.0|\n|2022-12-21 10:04:21|  CorsicoMaximo|RT @RTErdogan: Fe...|         14736|[rt, @rterdogan:,...|(65536,[4318,1343...|(65536,[4318,1343...|[-1.7135799790137...|[9.77875321643767...|       1.0|\n|2022-12-21 10:04:19|  ChelseaReddit|Kylian Mbappe on ...|         58819|[kylian, mbappe, ...|(65536,[1444,8436...|(65536,[1444,8436...|[-2.3437725409654...|[4.13673878742215...|       1.0|\n+-------------------+---------------+--------------------+--------------+--------------------+--------------------+--------------------+--------------------+--------------------+----------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://7ad3d33e3a7f:4040/jobs/job?id\u003d314"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1671615286957_343012051",
+      "id": "paragraph_1671615286957_343012051",
+      "dateCreated": "2022-12-21 09:34:46.957",
+      "dateStarted": "2022-12-21 10:11:39.866",
+      "dateFinished": "2022-12-21 10:11:40.393",
+      "status": "FINISHED"
+    }
+  ],
+  "name": "training model sentiment analysis",
+  "id": "2HPKM1GCY",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
